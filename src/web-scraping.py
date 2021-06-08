@@ -49,6 +49,7 @@ def make_alchemy_engine(dbname='postgres', port=5432):
 
 def extract_page_table(soup: BeautifulSoup, season: int, page: int, row_schema: dict) -> list:
     rows = soup.find_all('div', class_='rt-tr-group')
+
     all_rows = []
     for row in rows:
         values = row.find_all('div', class_='rt-td')
@@ -86,8 +87,40 @@ def extract_page_table(soup: BeautifulSoup, season: int, page: int, row_schema: 
     
     return all_rows
 
+def get_nhl_data(row_schema, mongo_coll, postgres_engine, start_season, end_season=None):
+    """
+    """
+    if end_season is None:
+        end_season = start_season
+
+    print('Starting web scraping...')
+    for season in range(start_season, end_season+1):
+        start_url = make_url(season)
+        soup = url_to_soup(start_url)
+        num_pages = int(soup.find('span', class_='-totalPages').text.strip())
+
+        for page in range(num_pages):
+            print(f'Starting season: {season}, page: {page} ...')
+
+            if page > 0:
+                new_url = make_url(season, page)
+                soup = url_to_soup(new_url)
+            
+            mongo_coll.insert_one({'season': season, 'page': page, 'soup': soup.prettify()})
+
+            all_rows = extract_page_table(soup, season, page, row_schema)
+
+            table = pd.DataFrame(all_rows)
+            table.to_sql('games', postgres_engine, index=False, if_exists='append')
+            time.sleep(5)
+    
+    print(f'Web scraping complete.')
+
 
 if __name__ == '__main__':
+    start_season = 2019
+    end_season = 2020
+
     mongo = MongoClient('localhost', 27017)
     db = mongo['nhl']
     coll = db['soup']
@@ -103,23 +136,7 @@ if __name__ == '__main__':
                 'pk_net_percent': None, 'sf_per_gp': None, 'sa_per_gp': None, 
                 'fo_win_percent': None, 'season': None, 'page': None}
 
-    for season in range(2010, 2018+1):
-        start_url = make_url(season)
-        soup = url_to_soup(start_url)
-        num_pages = int(soup.find('span', class_='-totalPages').text.strip())
-
-        for page in range(num_pages):
-            if page > 0:
-                new_url = make_url(season, page)
-                soup = url_to_soup(new_url)
-            
-            coll.insert_one({'season': season, 'page': page, 'soup': soup.prettify()})
-
-            all_rows = extract_page_table(soup, season, page, empty_row)
-
-            table = pd.DataFrame(all_rows)
-            table.to_sql('games', engine, index=False, if_exists='append')
-            time.sleep(5)
+    get_nhl_data(empty_row, coll, engine, start_season, end_season)
 
     mongo.close()
     engine.dispose()
