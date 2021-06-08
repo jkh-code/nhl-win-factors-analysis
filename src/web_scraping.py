@@ -48,7 +48,8 @@ def make_alchemy_engine(dbname='postgres', port=5432):
     string = f'postgresql://{username}:{password}@{host}:{port}/{dbname}'
     return create_engine(string)
 
-def extract_page_table(soup: BeautifulSoup, season: int, page: int, row_schema: dict) -> list:
+def extract_page_table(
+        soup: BeautifulSoup, season: int, page: int, row_schema: dict) -> list:
     rows = soup.find_all('div', class_='rt-tr-group')
 
     all_rows = []
@@ -72,14 +73,22 @@ def extract_page_table(soup: BeautifulSoup, season: int, page: int, row_schema: 
         new_row['so_wins'] = int(values[12].text.strip())
         new_row['gf'] = int(values[13].text.strip())
         new_row['ga'] = int(values[14].text.strip())
-        new_row['gf_per_gp'] = convert_double_dash(values[15].text.strip(), float)
-        new_row['ga_per_gp'] = convert_double_dash(values[16].text.strip(), float)
-        new_row['pp_percent'] = convert_double_dash(values[17].text.strip(), float)
-        new_row['pk_percent'] = convert_double_dash(values[18].text.strip(), float)
-        new_row['pp_net_percent'] = convert_double_dash(values[19].text.strip(), float)
-        new_row['pk_net_percent'] = convert_double_dash(values[20].text.strip(), float)
-        new_row['sf_per_gp'] = convert_double_dash(values[21].text.strip(), float)
-        new_row['sa_per_gp'] = convert_double_dash(values[22].text.strip(), float)
+        new_row['gf_per_gp'] = convert_double_dash(
+            values[15].text.strip(), float)
+        new_row['ga_per_gp'] = convert_double_dash(
+            values[16].text.strip(), float)
+        new_row['pp_percent'] = convert_double_dash(
+            values[17].text.strip(), float)
+        new_row['pk_percent'] = convert_double_dash(
+            values[18].text.strip(), float)
+        new_row['pp_net_percent'] = convert_double_dash(
+            values[19].text.strip(), float)
+        new_row['pk_net_percent'] = convert_double_dash(
+            values[20].text.strip(), float)
+        new_row['sf_per_gp'] = convert_double_dash(
+            values[21].text.strip(), float)
+        new_row['sa_per_gp'] = convert_double_dash(
+            values[22].text.strip(), float)
         new_row['fo_win_percent'] = float(values[23].text.strip())
         new_row['season'] = season
         new_row['page'] = page
@@ -88,7 +97,9 @@ def extract_page_table(soup: BeautifulSoup, season: int, page: int, row_schema: 
     
     return all_rows
 
-def get_nhl_data(row_schema, mongo_coll, postgres_engine, start_season, end_season=None):
+def get_nhl_data(
+        row_schema, mongo_coll, postgres_engine, 
+        start_season, end_season=None):
     """
     """
     if end_season is None:
@@ -107,12 +118,14 @@ def get_nhl_data(row_schema, mongo_coll, postgres_engine, start_season, end_seas
                 new_url = make_url(season, page)
                 soup = url_to_soup(new_url)
             
-            mongo_coll.insert_one({'season': season, 'page': page, 'soup': soup.prettify()})
+            mongo_coll.insert_one(
+                {'season': season, 'page': page, 'soup': soup.prettify()})
 
             all_rows = extract_page_table(soup, season, page, row_schema)
 
             table = pd.DataFrame(all_rows)
-            table.to_sql('games', postgres_engine, index=False, if_exists='append')
+            table.to_sql(
+                'games', postgres_engine, index=False, if_exists='append')
             time.sleep(5)
     
     print(f'Web scraping complete.')
