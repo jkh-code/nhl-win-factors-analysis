@@ -6,9 +6,10 @@ import psycopg2 as pg2
 from sqlalchemy import create_engine
 from os import environ
 
-from pprint import pprint
 import pandas as pd
 import time
+
+# from typing import TypeVar, Callable
 
 def url_to_soup(url: str) -> BeautifulSoup:
     """
