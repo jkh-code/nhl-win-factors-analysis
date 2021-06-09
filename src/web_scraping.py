@@ -11,17 +11,14 @@ import time
 
 # from typing import TypeVar, Callable
 
-def url_to_soup(url: str) -> BeautifulSoup:
-    """
-    Modified from https://towardsdatascience.com/creating-an-easy-website-scraper-for-data-science-sports-prediction-pt-1-f024abd53861
-    """
+def get_soup(url: str) -> BeautifulSoup:
     driver = webdriver.Chrome()
     driver.get(url)
     source = driver.page_source
     driver.close()
 
-    url_soup = BeautifulSoup(source, 'lxml')
-    return url_soup
+    soup = BeautifulSoup(source, 'lxml')
+    return soup
 
 def make_url(year: int, page: int=0) -> str:
     url = f'http://www.nhl.com/stats/teams?aggregate=0&reportType=game&seasonFrom={year}{year+1}&seasonTo={year}{year+1}&dateFromSeason&gameType=2&filter=gamesPlayed,gte,1&sort=points,wins&page={page}&pageSize=100'
@@ -108,7 +105,7 @@ def get_nhl_data(
     print('Starting web scraping...')
     for season in range(start_season, end_season+1):
         start_url = make_url(season)
-        soup = url_to_soup(start_url)
+        soup = get_soup(start_url)
         num_pages = int(soup.find('span', class_='-totalPages').text.strip())
 
         for page in range(num_pages):
@@ -116,7 +113,7 @@ def get_nhl_data(
 
             if page > 0:
                 new_url = make_url(season, page)
-                soup = url_to_soup(new_url)
+                soup = get_soup(new_url)
             
             mongo_coll.insert_one(
                 {'season': season, 'page': page, 'soup': soup.prettify()})
