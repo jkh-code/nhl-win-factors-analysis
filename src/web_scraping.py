@@ -21,7 +21,11 @@ def get_soup(url: str) -> BeautifulSoup:
     return soup
 
 def make_url(year: int, page: int=0) -> str:
-    url = f'http://www.nhl.com/stats/teams?aggregate=0&reportType=game&seasonFrom={year}{year+1}&seasonTo={year}{year+1}&dateFromSeason&gameType=2&filter=gamesPlayed,gte,1&sort=points,wins&page={page}&pageSize=100'
+    url = ('http://www.nhl.com/stats/teams?aggregate=0&'
+            + f'reportType=game&seasonFrom={year}{year+1}&'
+            + f'seasonTo={year}{year+1}&dateFromSeason&gameType=2'
+            + f'&filter=gamesPlayed,gte,1&sort=points,wins&page={page}&'
+            + 'pageSize=100')
     return url
 
 def convert_double_dash(cell: str, type_constructor):
