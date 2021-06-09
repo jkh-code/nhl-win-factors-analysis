@@ -15,3 +15,22 @@ FROM games
 WHERE season BETWEEN 2009 AND 2018
     AND ties IS NOT NULL
 ;
+
+-- Checking  number of games per season
+SELECT count(*) --2542
+FROM games
+WHERE season BETWEEN 2018 AND 2018
+;
+
+SELECT count(*) -- 1271
+FROM games
+WHERE season BETWEEN 2018 AND 2018
+    AND wins != 0
+;
+
+SELECT count(*) -- 1271
+FROM games
+WHERE season BETWEEN 2018 AND 2018
+    AND (losses != 0 OR ot_losses != 0)
+;
+
