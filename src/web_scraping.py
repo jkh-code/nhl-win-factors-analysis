@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 
 from pymongo import MongoClient
+from pymongo import Collection
+# import pymongo
 import psycopg2 as pg2
 from sqlalchemy import create_engine
 from os import environ
@@ -59,6 +61,7 @@ def make_alchemy_engine(
 def extract_page_table(
         soup: BeautifulSoup, season: int, 
         page: int, row_schema: dict) -> List[Dict]:
+    """Extract NHL data from parsed HTML."""
     rows = soup.find_all('div', class_='rt-tr-group')
 
     all_rows = []
@@ -107,9 +110,45 @@ def extract_page_table(
     return all_rows
 
 def get_nhl_data(
-        row_schema, mongo_coll, postgres_engine, 
-        start_season, end_season=None):
-    """
+        row_schema: dict, mongo_coll: Collection, postgres_engine: Engine, 
+        start_season: int, end_season: int=None) -> None:
+    """Extract, parse, transform, and store data from NHL's official
+    website.
+
+    This function will extract HTML from the NHL's official website, 
+    parse the HTML into a BeautifulSoup object, store the raw HTML into
+    a MongoDB collection, extract the data stored in the HTML table into
+    a list of dictionaries, transform the list of dictionaries into a
+    Pandas dataframe, store the dataframe into a Postgres table, and repeat
+    this process for all seasons and season pages from the given inputs.
+
+    Parameters
+    ----------
+    row_schema : dict
+        A dictionary that has HTML table row names as keys and `None` for
+        values. This dictionary is a template for the table columns and
+        cells to be extracted.
+
+    mongo_coll : pymongo.collection.Collection
+        A MongoDB collection to store the raw HTML data to.
+
+    postgres_engine : sqlalchemy.engine
+        Sqlalchemy engine to a PostgreSQL table to store the data from
+        the HTML table.
+
+    start_season : int
+        Start season as a single integer. To start with data from the 
+        2009-2010 season, input 2009.
+
+    end_season : int, None
+        End season as a single integer. To end with data from the 
+        2009-2010 season, input 2009. If the argument is omitted, then
+        the `start_season` is used for `end_season`.
+
+    Returns
+    -------
+    None
+        This function performs actions and does not return a value.
     """
     if end_season is None:
         end_season = start_season
@@ -138,6 +177,7 @@ def get_nhl_data(
             time.sleep(5)
     
     print(f'Web scraping complete.')
+    return None
 
 
 if __name__ == '__main__':
