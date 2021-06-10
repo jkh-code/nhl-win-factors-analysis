@@ -72,4 +72,35 @@ def plot_win_cum_dist(perc: pd.Series, cum_perc_wins: pd.Series, title: str,
 
 
 if __name__ == '__main__':
-    pass
+    nhl_query = """
+                SELECT
+                    season, team, game, gp, wins, losses, ot_losses, points,
+                    point_percent, reg_wins, reg_ot_wins, so_wins, gf, ga, 
+                    gf_per_gp, ga_per_gp, pp_percent, pk_percent, 
+                    pp_net_percent, pk_net_percent, sf_per_gp, sa_per_gp, 
+                    fo_win_percent
+                FROM games
+                WHERE season BETWEEN 2009 AND 2018;
+                """
+    conn = make_postgres_conn('nhl')
+    df = pd.read_sql(nhl_query, conn)
+    conn.close()
+
+    df.drop(
+        ['reg_wins', 'reg_ot_wins', 'so_wins', 'gf_per_gp', 'ga_per_gp', 
+            'points', 'point_percent'], 
+        axis=1, inplace=True)
+    df.insert(
+        1, 'date', pd.to_datetime(
+            df['game'].str.slice(0, 9+1), format='%Y/%m/%d'))
+    df.insert(3, 'home_game', np.where(
+        df['game'].str.contains('vs'), 'Home', 'Away'))
+    df.insert(4, 'opponent', df['game'].str.slice(-3))
+    df.insert(5, 'outcome', np.where(df['wins'] == 1, 'Win', 'Loss'))
+    df.insert(13, 'goal_diff', df['gf'] - df['ga'])
+    df.insert(20, 'shot_diff', df['sf_per_gp'] - df['sa_per_gp'])
+    df.drop(['game'], axis=1, inplace=True)
+    df.sort_values(['season', 'team', 'date'], inplace=True)
+    df['prev_date'] = df.groupby(['season', 'team'])['date'].shift(1)
+    df['days_btwn_games'] = (df['date'] - df['prev_date']).dt.days
+    
