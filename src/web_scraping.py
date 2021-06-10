@@ -9,9 +9,12 @@ from os import environ
 import pandas as pd
 import time
 
-# from typing import TypeVar, Callable
+from typing import Union, Type, List, Dict
+
+from sqlalchemy.engine.base import Engine
 
 def get_soup(url: str) -> BeautifulSoup:
+    """Return parsed HTML code using Selenium and ChromeDriver."""
     driver = webdriver.Chrome()
     driver.get(url)
     source = driver.page_source
@@ -28,12 +31,15 @@ def make_url(year: int, page: int=0) -> str:
             + 'pageSize=100')
     return url
 
-def convert_double_dash(cell: str, type_constructor):
+def convert_double_dash(
+        cell: str, 
+        type_constructor: Union[Type[int], Type[float]]) -> Union[int, float]:
     if cell == '--':
         return None
     return type_constructor(cell)
 
-def make_postgres_conn(dbname='postgres', port=5432):
+def make_postgres_conn(
+        dbname: str='postgres', port: int=5432) -> pg2.connection:
     conn = pg2.connect(
         dbname=dbname,
         port=port,
@@ -42,7 +48,8 @@ def make_postgres_conn(dbname='postgres', port=5432):
         password=environ['PG_PASSWORD'])
     return conn
 
-def make_alchemy_engine(dbname='postgres', port=5432):
+def make_alchemy_engine(
+        dbname: str='postgres', port: int=5432) -> Engine:
     username = environ['PG_USER']
     password = environ['PG_PASSWORD']
     host = environ['PG_HOST']
@@ -50,7 +57,8 @@ def make_alchemy_engine(dbname='postgres', port=5432):
     return create_engine(string)
 
 def extract_page_table(
-        soup: BeautifulSoup, season: int, page: int, row_schema: dict) -> list:
+        soup: BeautifulSoup, season: int, 
+        page: int, row_schema: dict) -> List[Dict]:
     rows = soup.find_all('div', class_='rt-tr-group')
 
     all_rows = []
