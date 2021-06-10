@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 
 from pymongo import MongoClient
-from pymongo import Collection
+from pymongo import collection
 # import pymongo
 import psycopg2 as pg2
 from sqlalchemy import create_engine
@@ -41,7 +41,7 @@ def convert_double_dash(
     return type_constructor(cell)
 
 def make_postgres_conn(
-        dbname: str='postgres', port: int=5432) -> pg2.connection:
+        dbname: str='postgres', port: int=5432) -> pg2.extensions.connection:
     conn = pg2.connect(
         dbname=dbname,
         port=port,
@@ -110,7 +110,7 @@ def extract_page_table(
     return all_rows
 
 def get_nhl_data(
-        row_schema: dict, mongo_coll: Collection, postgres_engine: Engine, 
+        row_schema: dict, mongo_coll: collection, postgres_engine: Engine, 
         start_season: int, end_season: int=None) -> None:
     """Extract, parse, transform, and store data from NHL's official
     website.
