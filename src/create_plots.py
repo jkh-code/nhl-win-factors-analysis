@@ -70,6 +70,21 @@ def plot_win_cum_dist(perc: pd.Series, cum_perc_wins: pd.Series, title: str,
     fig.tight_layout()
     return fig, ax
 
+def estimate_times_shorthand(pk_percent: float, limit: int=12) -> int:
+    """Estimate the number of times a team was shorthand based on the 
+    team's penalty kill percentage."""
+    if pk_percent in (0.0, 50.0, 100.0):
+        return np.nan
+    if np.isnan(pk_percent):
+        return 0
+    
+    target = round(100.0 - pk_percent, 1)
+    for d in range(2, limit+1):
+        for n in range(1, d):
+            perc = round(100 * n/d, 1)
+            if perc == target:
+                return d
+
 
 if __name__ == '__main__':
     nhl_query = """
@@ -103,4 +118,5 @@ if __name__ == '__main__':
     df.sort_values(['season', 'team', 'date'], inplace=True)
     df['prev_date'] = df.groupby(['season', 'team'])['date'].shift(1)
     df['days_btwn_games'] = (df['date'] - df['prev_date']).dt.days
+    
     
