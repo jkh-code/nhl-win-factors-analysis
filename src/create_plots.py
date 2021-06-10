@@ -29,15 +29,19 @@ def return_aggregate_wins_df(df: pd.DataFrame, group_col: str) -> pd.DataFrame:
     Parameters
     ----------
     df : pd.DataFrame
-        Two column dataframe with one column containing continuous data and the second column containing 1's for counting each row.
+        Two column dataframe with one column containing continuous data 
+        and the second column containing 1's for counting each row.
     
     group_col : str
-        The name of the column from `df` to aggregate by. This function will only accept one column to aggregate by.
+        The name of the column from `df` to aggregate by. This function 
+        will only accept one column to aggregate by.
     
     Returns
     -------
     df_agg : pd.DataFrame
-        A datadrame with number of wins by group, `num_wins`, cumulative wins, `cum_wins`, total wins, `total`, and cumulative percentage of wins, `cum_perc`.
+        A dataframe with number of wins by group, `num_wins`, cumulative 
+        wins, `cum_wins`, total wins, `total`, and cumulative percentage 
+        of wins, `cum_perc`.
     """
     df_agg = df.groupby(group_col).sum().reset_index()
     df_agg.rename(columns={'gp': 'num_wins'}, inplace=True)
@@ -46,7 +50,8 @@ def return_aggregate_wins_df(df: pd.DataFrame, group_col: str) -> pd.DataFrame:
     df_agg['cum_perc'] = df_agg['cum_wins'] / df_agg['total']
     return df_agg
 
-def plot_win_hist(s: pd.Series, title: str, bins: int=20) -> Tuple[plt.Figure, plt.Axes]:
+def plot_win_hist(s: pd.Series, title: str, 
+        bins: int=20) -> Tuple[plt.Figure, plt.Axes]:
     """Plot a histogram and return figure and axes objects."""
     fig, ax = plt.subplots()
     ax.hist(s, bins=bins)
@@ -54,8 +59,10 @@ def plot_win_hist(s: pd.Series, title: str, bins: int=20) -> Tuple[plt.Figure, p
     fig.tight_layout()
     return fig, ax
 
-def plot_win_cum_dist(perc: pd.Series, cum_perc_wins: pd.Series, title: str, ylims: Tuple[int, int]=(-0.05, 1.05)) -> Tuple[plt.Figure, plt.Axes]:
-    """Create a cumulative distribution line plot and return figure and axes objects."""
+def plot_win_cum_dist(perc: pd.Series, cum_perc_wins: pd.Series, title: str, 
+        ylims: Tuple[int, int]=(-0.05, 1.05)) -> Tuple[plt.Figure, plt.Axes]:
+    """Create a cumulative distribution line plot and return figure and 
+    axes objects."""
     fig, ax = plt.subplots()
     ax.plot(perc, cum_perc_wins)
     ax.set_ylim(ylims)
