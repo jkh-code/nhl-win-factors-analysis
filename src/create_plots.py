@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.stats as stats
 
 from web_scraping import make_postgres_conn
 
@@ -119,4 +120,38 @@ if __name__ == '__main__':
     df['prev_date'] = df.groupby(['season', 'team'])['date'].shift(1)
     df['days_btwn_games'] = (df['date'] - df['prev_date']).dt.days
     
-    
+    # PP percentage influence on number of wins
+    pp_data = df.loc[df['outcome']=='Win', ['pp_percent', 'gp']]
+    pp_agg = return_aggregate_wins_df(pp_data, 'pp_percent')
+
+    fig, ax = plot_win_hist(pp_data['pp_percent'], 'Number of Wins by Power Play Percent')
+
+    x_labels = range(0, 100+1, 20)
+    ax.set_xticks(x_labels)
+    ax.set_xticklabels([str(num) + '%' for num in x_labels])
+
+    y_labels = range(0, 5000+1, 1000)
+    ax.set_yticks(y_labels)
+    ax.set_yticklabels([format(num, ',') for num in y_labels])
+
+    ax.set_xlabel('Percent Successful Power Plays')
+    ax.set_ylabel('Wins')
+
+    fig.tight_layout()
+    plt.savefig('./images/num-pp-wins.png')
+
+    fig, ax = plot_win_cum_dist(pp_agg['pp_percent'], pp_agg['cum_perc'], 'Cumulative Percent Wins by Power Play Win Percent')
+
+    x_labels = range(0, 100+1, 20)
+    ax.set_xticks(x_labels)
+    ax.set_xticklabels([str(num) + '%' for num in x_labels])
+
+    y_labels = np.linspace(0, 1, 6)
+    ax.set_yticks(y_labels)
+    ax.set_yticklabels([f'{num:.0f}%' for num in y_labels * 100])
+
+    ax.set_xlabel('Percent Successful Power Plays')
+    ax.set_ylabel('Percent')
+
+    fig.tight_layout()
+    plt.savefig('./images/cum-perc-wins-pp.png')
