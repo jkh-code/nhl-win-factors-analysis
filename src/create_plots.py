@@ -155,3 +155,96 @@ if __name__ == '__main__':
 
     fig.tight_layout()
     plt.savefig('./images/cum-perc-wins-pp.png')
+
+    # Penalty kill percentage influence on wins
+    pk_data = df.loc[df['outcome']=='Win', ['pk_percent', 'gp']]
+    pk_agg = return_aggregate_wins_df(pk_data, 'pk_percent')
+
+    fig, ax = plot_win_hist(pk_data['pk_percent'], 'Number of Wins by Penalty Kill Percent')
+
+    x_labels = range(0, 100+1, 20)
+    ax.set_xticks(x_labels)
+    ax.set_xticklabels([str(num) + '%' for num in x_labels])
+
+    y_labels = range(0, 7000+1, 1000)
+    ax.set_yticks(y_labels)
+    ax.set_yticklabels([format(num, ',') for num in y_labels])
+
+    ax.set_xlabel('Percent Successful Penalty Kills')
+    ax.set_ylabel('Wins')
+
+    fig.tight_layout()
+    plt.savefig('./images/num-wins-pk.png')
+
+    fig, ax = plot_win_cum_dist(pk_agg['pk_percent'], pk_agg['cum_perc'], 'Cumulative Percent Wins by PK Percent')
+
+    x_labels = range(0, 100+1, 20)
+    ax.set_xticks(x_labels)
+    ax.set_xticklabels([str(num) + '%' for num in x_labels])
+
+    y_labels = np.linspace(0, 1, 6)
+    ax.set_yticks(y_labels)
+    ax.set_yticklabels([f'{num:.0f}%' for num in y_labels * 100])
+
+    ax.set_xlabel('Percent Successful Penalty Kills')
+    ax.set_ylabel('Percent')
+
+    fig.tight_layout()
+    plt.savefig('./images/cum-perc-wins-pk.png')
+
+    # Shots differential influence on wins
+    sd_data = df.loc[df['outcome']=='Win', ['shot_diff', 'gp']]
+    sd_agg = return_aggregate_wins_df(sd_data, 'shot_diff')
+
+    fig, ax = plot_win_hist(sd_data['shot_diff'], 'Number of Wins by Shot Differential', bins=80)
+
+    ax.set_xlabel('Shot Differential')
+    ax.set_ylabel('Wins')
+
+    fig.tight_layout()
+    plt.savefig('./images/num-wins-shot-diff.png')
+
+    fig, ax = plot_win_cum_dist(sd_agg['shot_diff'], sd_agg['cum_perc'], 'Cumulative Percent Wins by Shot Differential')
+
+    y_labels = np.linspace(0, 1, 6)
+    ax.set_yticks(y_labels)
+    ax.set_yticklabels([f'{num:.0f}%' for num in y_labels * 100])
+
+    ax.set_xlabel('Shot Differential')
+    ax.set_ylabel('Percent')
+
+    fig.tight_layout()
+    plt.savefig('./images/cum-perc-wins-shot-diff.png')
+
+    # Face-Off win percentage influence on winning
+    fo_data = df.loc[df['outcome']=='Win', ['fo_win_percent', 'gp']]
+    fo_agg = return_aggregate_wins_df(fo_data, 'fo_win_percent')
+
+    fig, ax = plot_win_hist(fo_data['fo_win_percent'], 'Number of Wins by Face-Off Win Percent', bins=75)
+
+    x_labels = range(30, 80+1, 10)
+    ax.set_xticks(x_labels)
+    ax.set_xticklabels([str(num) + '%' for num in x_labels])
+
+    ax.set_xlabel('Percent Successful Face-Offs')
+    ax.set_ylabel('Wins')
+
+    fig.tight_layout()
+    plt.savefig('./images/num-face-off-wins.png')
+
+    fig, ax = plot_win_cum_dist(fo_agg['fo_win_percent'], fo_agg['cum_perc'], 'Cumulative Percent Wins by Face-Off Percentage')
+
+    x_labels = range(30, 80+1, 10)
+    ax.set_xticks(x_labels)
+    ax.set_xticklabels([str(num) + '%' for num in x_labels])
+
+    y_labels = np.linspace(0, 1, 6)
+    ax.set_yticks(y_labels)
+    ax.set_yticklabels([f'{num:.0f}%' for num in y_labels * 100])
+
+    ax.set_xlabel('Percent Successful Face-Offs')
+    ax.set_ylabel('Percent')
+
+    fig.tight_layout()
+    plt.savefig('./images/cum-perc-wins-face-off.png')
+    
