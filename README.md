@@ -1,1 +1,1 @@
-# nhl-win-factors-analysis
+# Analysis of Regular Season Win Factors in the NHL
