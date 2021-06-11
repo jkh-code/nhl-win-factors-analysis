@@ -102,6 +102,25 @@ No data was removed to conduct this analysis as all games start with a face-off,
 Interestingly, the percent face-off win distribution appears to be normally distributed, and most wins come when the face-off win percentage is around 50%. This suggests that winning more face-offs does not result in winning more games.
 
 ## Hypothesis Testing
+After conducting the exploratory data analysis, the impact of penalty kills on a game was an interesting topic to explore further. It is reasonable to ask: do high-penalty games have a different win rate than low-penalty games?
+
+While the number of penalty kill situations for a team is not in the dataset, this data is contained on the NHL website but would require additional web scraping. Before putting in the effort to retrieve this data, a preliminary analysis will be conducted with the available data to determine if this question is worth pursuing further.
+
+The dataset contains penalty kill percentage and it is reasonable to assume that there are a finite and limited number of penalty kills during a game. From reviewing the [data](http://www.nhl.com/stats/teams?aggregate=0&report=penaltykill&reportType=game&seasonFrom=20092010&seasonTo=20182019&dateFromSeason&gameType=2&filter=gamesPlayed,gte,1&sort=timesShorthanded&page=0&pageSize=50) available on the NHL website, it appears the maximum number of penalty kill situations for all games between the 2009 and 2018 seasons was 12. Knowing the maximum denominator that could produce a penalty kill percentage for a given game, an estimate of the number of penalty kill situations can be estimated.
+
+To conduct this estimate, percentages that had an indeterminate number of penalty kill situations were removed. Games where the penalty kill percentage was 0%, 50%, or 100% were removed due to too many combinations of numerators and denominators that could have produced these percentages. As a result, 15,290 records, about 65% of the dataset was removed, resulting in 8,154 games to use in the hypothesis test.
+
+The remaining games were then labelled as 'high' or 'low' penalty kill games based on the estimated number penalty kills per game. Games with between 0 and 5 penalty kills were labelled as low and games with between 6 and 11 penalty kills were labelled as high.
+
+The null and alternative hypotheses are given below.
+
+| Hypothesis  | Definition |
+| ------------- | ------------- |
+| $H_0$  | There is no different in win rates between high and low penalty games.  |
+| $H_a$  | There is a difference in the win rates between high and low penalty games.  |
+
+
+
 
 
 ## Future Analysis
