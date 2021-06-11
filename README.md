@@ -1,5 +1,8 @@
 # Analysis of Regular Season Win Factors in the NHL
-[Presentation](https://docs.google.com/presentation/d/1hieT8_FW9XxZ9152ZLerFn3UIUQtQLYK2II0hZgiN80/edit?usp=sharing)
+
+<p align="center">
+  <a href="https://docs.google.com/presentation/d/1hieT8_FW9XxZ9152ZLerFn3UIUQtQLYK2II0hZgiN80/edit?usp=sharing">Presentation</a>
+</p>
 
 ## Table of Contents
 - [Background](#background)
