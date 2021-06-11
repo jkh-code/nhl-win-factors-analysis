@@ -85,16 +85,6 @@ def estimate_times_shorthand(pk_percent: float, limit: int=12) -> int:
             perc = round(100 * n/d, 1)
             if perc == target:
                 return d
-    
-def welch_satterhwaithe_df(sample_1: pd.Series, sample_2: pd.Series) -> float:
-    ss1 = len(sample_1)
-    ss2 = len(sample_2)
-    dof = (
-        ((np.var(sample_1)/ss1 + np.var(sample_2)/ss2)**(2.0))
-        / ((np.var(sample_1)/ss1)**(2.0)/(ss1 - 1) 
-            + (np.var(sample_2)/ss2)**(2.0)/(ss2 - 1)))
-
-    return dof
 
 
 if __name__ == '__main__':
@@ -265,30 +255,3 @@ if __name__ == '__main__':
 
     fig.tight_layout()
     plt.savefig('./images/cum-perc-wins-face-off.png')
-
-    # Hypothesis testing
-    df['est_times_shorthand'] = df['pk_percent'].apply(
-        estimate_times_shorthand)
-
-    col = 'est_times_shorthand'
-    conditions = [np.isnan(df[col]), df[col]>5, df[col]<=5]
-    choices = [None, 'high', 'low']
-    df['est_high_penalty_game'] = np.select(conditions, choices, 
-        default=np.nan)
-
-    # lpg = low penalty games, hpg = high penalty games
-    data_lpg = df.loc[df['est_high_penalty_game']=='low', 'wins']
-    data_hpg = df.loc[df['est_high_penalty_game']=='high', 'wins']
-
-    p_value = stats.ttest_ind(a=data_lpg, b=data_hpg, equal_var=False)[1]
-
-    dof = welch_satterhwaithe_df(data_lpg, data_hpg)
-    students = stats.t(dof)
-
-    fig, ax = plt.subplots(1, figsize=(10, 3))
-    x = np.linspace(-3, 3, num=250)
-    ax.plot(x, students.pdf(x), linewidth=2)
-    ax.fill_between(x, students.pdf(x), where=(x >= p_value), 
-        color="red", alpha=0.5)
-    ax.set_title("Null Hypothesis Distribution with p-value Region")
-    plt.savefig('./images/null-hypothesis-dist-pvalue.png')
