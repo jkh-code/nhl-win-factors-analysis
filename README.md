@@ -43,6 +43,63 @@ The dataset for this project was scraped from the NHL website using [Selenium](h
 
 ## Exploratory Data Analysis
 
+### Power Play Percent Impact
+Power plays are when one or more players from the opposing team are removed from play for a set period of time due to penalties and a team has a player advantage over their opponent. This is a prime opportunity to score and to potentially win a game. The power play percentage (PP%) metric measures how effective a team was during their power plays. A percentage of 100% means a team scored on every power play and a percentage of 0% means a team did not score on any power play.
+
+The number of wins by power play percentage was examined after removing 221 records that did not have a power play percentage value. A missing power play percentage means the team did not have a power play that game. These records were removed because the impact of power plays cannot be assessed from these games. This examination produced interesting results.
+
+<center>
+
+![Number of wins by power play percent](./images/num-pp-wins.png)
+![Cumulative percent of wins by power play percent](./images/cum-perc-wins-pp.png)
+
+</center>
+
+About 40% of wins came from games where the percent of successful power plays was 0% and about 90% of all wins came from a power play percentage of 50% or less. These finds suggest that capitalizing on a power play, that is, scoring during a power play is not as important to winning as other factors.
+
+### Penalty Kill Percent Impact
+Penalty kills are when one or more players from a team are removed from play for a set period of time due ot penalties and the team has a player disadvantage compared to their opponent. These situations seem to be prime to lose a game. The penalty kill percentage (PK%) metric measures how effective a team was during penalty kills. 100% means a team prevented their opponent from scoring during each penalty kill situation and 0% means a team was scored on during every penalty kill situation.
+
+The number of wins by penalty kill percentage was examined after removing 205 records that did not have a penalty kill percentage. These are games where a team was not in a penalty kill situation, and they were removed because the impact of penalty kills cannot be determined from these games.
+
+<center>
+
+![Number of wins by penalty kill percent](./images/num-wins-pk.png)
+![Cumulative percent of wins by penalty kill percent](./images/cum-perc-wins-pk.png)
+
+</center>
+
+These results seem to suggest that a higher penalty kill percentage results in more games won. About 60% of wins come when the penalty kill percentage is 100% and 65% of wins come when the penalty kill percentage is about 65% or higher.
+
+These results compared with the power play results seem to suggest it is more important to prevent your opponent from scoring during a penalty kill then it is for a team to score during a power play.
+
+### Shot Differential Impact
+Shot differential is the number of times a team shot on their opponents goal minus the number of times an opponent shot on a team's goal. A larger differential means a team shot more on their opponents goal and a smaller differential means an opponent shot more on a team's goal.
+
+No data was removed to conduct this analysis as all teams in all games have made at least one shot on goal during a game.
+
+<center>
+
+![Number of wins by shot differential](./images/num-wins-shot-diff.png)
+![Cumulative percent of wins by shot differential](./images/cum-perc-wins-shot-diff.png)
+
+</center>
+
+Interestingly, the shot differential distribution appears to be normally distributed, and most wins come when the shot differential is relatively close. This suggests that making more shots on your opponent does not necessarily mean a team will win a game.
+
+### Face-Off Win Percent Impact
+Face-off win percentage is the percent of times a team won a face-off during a game. Winning a face-off means that a team controls the puck and they can make shots on goal. A value of 100% means all face-offs were won by a team and a value of 0% means zero face-offs were won by a team.
+
+No data was removed to conduct this analysis as all games start with a face-off, resulting in all games have a face-off percentage.
+
+<center>
+
+![Number of wins by face-off percent](./images/num-face-off-wins.png)
+![Cumulative percent of wins by face-off percent](./images/cum-perc-wins-face-off.png)
+
+</center>
+
+Interestingly, the percent face-off win distribution appears to be normally distributed, and most wins come when the face-off win percentage is around 50%. This suggests that winning more face-offs does not result in winning more games.
 
 ## Hypothesis Testing
 
@@ -56,6 +113,3 @@ The dataset for this project was scraped from the NHL website using [Selenium](h
 
 
 
-<center>
-<img src="./images/cum-perc-wins-pp.png" width="49%"/> <img src="./images/cum-perc-wins-pp.png" width="49%"/> 
-</center>
