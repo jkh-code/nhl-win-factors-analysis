@@ -134,7 +134,8 @@ if __name__ == '__main__':
     pp_data = df.loc[df['outcome']=='Win', ['pp_percent', 'gp']]
     pp_agg = return_aggregate_wins_df(pp_data, 'pp_percent')
 
-    fig, ax = plot_win_hist(pp_data['pp_percent'], 'Number of Wins by Power Play Percent')
+    fig, ax = plot_win_hist(pp_data['pp_percent'], 
+        'Number of Wins by Power Play Percent')
 
     x_labels = range(0, 100+1, 20)
     ax.set_xticks(x_labels)
@@ -150,7 +151,8 @@ if __name__ == '__main__':
     fig.tight_layout()
     plt.savefig('./images/num-pp-wins.png')
 
-    fig, ax = plot_win_cum_dist(pp_agg['pp_percent'], pp_agg['cum_perc'], 'Cumulative Percent Wins by Power Play Win Percent')
+    fig, ax = plot_win_cum_dist(pp_agg['pp_percent'], pp_agg['cum_perc'], 
+        'Cumulative Percent Wins by Power Play Win Percent')
 
     x_labels = range(0, 100+1, 20)
     ax.set_xticks(x_labels)
@@ -170,7 +172,8 @@ if __name__ == '__main__':
     pk_data = df.loc[df['outcome']=='Win', ['pk_percent', 'gp']]
     pk_agg = return_aggregate_wins_df(pk_data, 'pk_percent')
 
-    fig, ax = plot_win_hist(pk_data['pk_percent'], 'Number of Wins by Penalty Kill Percent')
+    fig, ax = plot_win_hist(pk_data['pk_percent'], 
+        'Number of Wins by Penalty Kill Percent')
 
     x_labels = range(0, 100+1, 20)
     ax.set_xticks(x_labels)
@@ -186,7 +189,8 @@ if __name__ == '__main__':
     fig.tight_layout()
     plt.savefig('./images/num-wins-pk.png')
 
-    fig, ax = plot_win_cum_dist(pk_agg['pk_percent'], pk_agg['cum_perc'], 'Cumulative Percent Wins by PK Percent')
+    fig, ax = plot_win_cum_dist(pk_agg['pk_percent'], pk_agg['cum_perc'], 
+        'Cumulative Percent Wins by PK Percent')
 
     x_labels = range(0, 100+1, 20)
     ax.set_xticks(x_labels)
@@ -206,7 +210,8 @@ if __name__ == '__main__':
     sd_data = df.loc[df['outcome']=='Win', ['shot_diff', 'gp']]
     sd_agg = return_aggregate_wins_df(sd_data, 'shot_diff')
 
-    fig, ax = plot_win_hist(sd_data['shot_diff'], 'Number of Wins by Shot Differential', bins=80)
+    fig, ax = plot_win_hist(sd_data['shot_diff'], 
+        'Number of Wins by Shot Differential', bins=80)
 
     ax.set_xlabel('Shot Differential')
     ax.set_ylabel('Wins')
@@ -214,7 +219,8 @@ if __name__ == '__main__':
     fig.tight_layout()
     plt.savefig('./images/num-wins-shot-diff.png')
 
-    fig, ax = plot_win_cum_dist(sd_agg['shot_diff'], sd_agg['cum_perc'], 'Cumulative Percent Wins by Shot Differential')
+    fig, ax = plot_win_cum_dist(sd_agg['shot_diff'], sd_agg['cum_perc'], 
+        'Cumulative Percent Wins by Shot Differential')
 
     y_labels = np.linspace(0, 1, 6)
     ax.set_yticks(y_labels)
@@ -230,7 +236,8 @@ if __name__ == '__main__':
     fo_data = df.loc[df['outcome']=='Win', ['fo_win_percent', 'gp']]
     fo_agg = return_aggregate_wins_df(fo_data, 'fo_win_percent')
 
-    fig, ax = plot_win_hist(fo_data['fo_win_percent'], 'Number of Wins by Face-Off Win Percent', bins=75)
+    fig, ax = plot_win_hist(fo_data['fo_win_percent'], 
+        'Number of Wins by Face-Off Win Percent', bins=75)
 
     x_labels = range(30, 80+1, 10)
     ax.set_xticks(x_labels)
@@ -242,7 +249,8 @@ if __name__ == '__main__':
     fig.tight_layout()
     plt.savefig('./images/num-face-off-wins.png')
 
-    fig, ax = plot_win_cum_dist(fo_agg['fo_win_percent'], fo_agg['cum_perc'], 'Cumulative Percent Wins by Face-Off Percentage')
+    fig, ax = plot_win_cum_dist(fo_agg['fo_win_percent'], fo_agg['cum_perc'], 
+        'Cumulative Percent Wins by Face-Off Percentage')
 
     x_labels = range(30, 80+1, 10)
     ax.set_xticks(x_labels)
@@ -259,12 +267,14 @@ if __name__ == '__main__':
     plt.savefig('./images/cum-perc-wins-face-off.png')
 
     # Hypothesis testing
-    df['est_times_shorthand'] = df['pk_percent'].apply(estimate_times_shorthand)
+    df['est_times_shorthand'] = df['pk_percent'].apply(
+        estimate_times_shorthand)
 
     col = 'est_times_shorthand'
     conditions = [np.isnan(df[col]), df[col]>5, df[col]<=5]
     choices = [None, 'high', 'low']
-    df['est_high_penalty_game'] = np.select(conditions, choices, default=np.nan)
+    df['est_high_penalty_game'] = np.select(conditions, choices, 
+        default=np.nan)
 
     # lpg = low penalty games, hpg = high penalty games
     data_lpg = df.loc[df['est_high_penalty_game']=='low', 'wins']
@@ -278,6 +288,7 @@ if __name__ == '__main__':
     fig, ax = plt.subplots(1, figsize=(10, 3))
     x = np.linspace(-3, 3, num=250)
     ax.plot(x, students.pdf(x), linewidth=2)
-    ax.fill_between(x, students.pdf(x), where=(x >= p_value), color="red", alpha=0.5)
+    ax.fill_between(x, students.pdf(x), where=(x >= p_value), 
+        color="red", alpha=0.5)
     ax.set_title("Null Hypothesis Distribution with p-value Region")
     plt.savefig('./images/null-hypothesis-dist-pvalue.png')
