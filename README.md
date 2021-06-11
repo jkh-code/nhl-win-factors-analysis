@@ -119,13 +119,29 @@ The null and alternative hypotheses are given below.
 | $H_0$  | There is no different in win rates between high and low penalty games.  |
 | $H_a$  | There is a difference in the win rates between high and low penalty games.  |
 
+Win rates are calculate using the following equation.
 
+$$\text{win rate} = \frac{\text{Number of wins}}{\text{Number of games}}$$
 
+This calculation is a mean, therefore, we can use the Central Limit Theorem and a Normal Distribution as our probabilistic model. It is reasonable to assume that a win in a high penalty game is independent of a win in a low penalty game and variances of high penalty and low penalty games are independent. Since the variance is unknown, Student's t-distribution will need to be used.
 
+$\alpha$ will be set at 0.20 because we are exploring if this analysis is worth pursuing further, and a two-tailed test will be conducted to determine if high penalty games have a higher or lower win rate than low penalty games.
+
+Conducting the hypothesis test resulted in p-value of 0.5671. As the p-value is larger than $\alpha = 0.20$, the null hypothesis is not rejected.
+
+From these results, it appears exploring the impact high penalty and low penalty games have on win rate will not be productive.
 
 ## Future Analysis
+The results from the exploratory data analysis provided insights into avenues for further exploration. 
 
+The current plots only examine the counts of wins or the percent of wins for a given measure. While these plots provide some insight into the influence of factors, a more insightful exploration would be to compare win rates by the different factors.
 
+Additional analysis could also be conducted by diving deeper into each of the factors explored.
+
+- What factors influence power play percentage? Does power play time or number of players up compared to an opponent influence wins?
+- What factors influence penalty kill percentage? Does the number of players down influence wins more or less?
+- Does the percent of games won by shot differential produce any additional insight?
+- Does face-off win percentage by face-off location (center, neutral zone, or end zone) impact wins?
 
 
 
