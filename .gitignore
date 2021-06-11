@@ -131,4 +131,4 @@ dmypy.json
 # Additional
 .DS_Store
 .vscode
-temp.*
+temp*.*
